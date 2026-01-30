@@ -1,0 +1,44 @@
+# Public Assets
+
+This folder should contain:
+
+## Images needed:
+- /hero-image.jpg (1200x800px) - Main hero section image
+- /og-image.jpg (1200x630px) - OpenGraph image
+- /logo.png (200x200px) - Company logo
+- /favicon.ico - Website favicon
+- /apple-touch-icon.png (180x180px) - Apple touch icon
+
+## Service Images:
+- /services/web-development.jpg
+- /services/app-development.jpg  
+- /services/ai-automation.jpg
+- /services/video-editing.jpg
+- /services/photo-editing.jpg
+- /services/meta-ads.jpg
+- /services/google-ads.jpg
+- /services/seo.jpg
+
+## Project Images:
+- /projects/ecommerce.jpg
+- /projects/banking-app.jpg
+- /projects/ai-chatbot.jpg
+- /projects/video-campaign.jpg
+
+## Testimonial Images:
+- /testimonials/sarah.jpg
+- /testimonials/rajesh.jpg
+- /testimonials/emily.jpg
+- /testimonials/david.jpg
+- /testimonials/priya.jpg
+
+## Product Images:
+- /products/roomwala-logo.png
+- /products/roomwala-1.jpg
+- /products/roomwala-2.jpg
+- /products/roomwala-3.jpg
+
+For development, you can use placeholder images from:
+- https://picsum.photos/ (e.g., https://picsum.photos/1200/800)
+- https://via.placeholder.com/ (e.g., https://via.placeholder.com/1200x800)
+- https://unsplash.com/ for high-quality stock photos

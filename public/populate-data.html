@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Populate Test Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border: 1px solid #c3e6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border: 1px solid #bee5eb;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border: 1px solid #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 SEO Generator Test Data Setup</h1>
+        <p>This page will populate your localStorage with test cities and services data for testing the SEO Content Generator.</p>
+        
+        <div class="info">
+            <strong>What this will add:</strong>
+            <ul>
+                <li><strong>4 Test Cities:</strong> Toronto, Vancouver, New York, London</li>
+                <li><strong>8 Test Services:</strong> Web Dev, App Dev, AI Automation, Video Editing, Photo Editing, Meta Ads, Google Ads, SEO</li>
+            </ul>
+        </div>
+
+        <button onclick="populateData()">📊 Populate Test Data</button>
+        <button onclick="clearData()">🗑️ Clear All Data</button>
+        <button onclick="checkData()">👀 Check Current Data</button>
+        
+        <div id="result"></div>
+        <div id="dataDisplay"></div>
+    </div>
+
+    <script>
+        const testCities = [
+            { id: 1, name: 'Toronto', country: 'Canada', status: 'active', slug: 'toronto' },
+            { id: 2, name: 'Vancouver', country: 'Canada', status: 'active', slug: 'vancouver' },
+            { id: 3, name: 'New York', country: 'USA', status: 'active', slug: 'new-york' },
+            { id: 4, name: 'London', country: 'UK', status: 'active', slug: 'london' }
+        ];
+
+        const testServices = [
+            { 
+                id: 1, 
+                title: 'Web Development', 
+                slug: 'web-development',
+                description: 'Custom websites and web applications built with modern technologies.',
+                price: '$2,500 - $15,000',
+                icon: '🌐',
+                features: ['Responsive Design', 'SEO Optimized', 'Fast Loading'],
+                status: 'active'
+            },
+            { 
+                id: 2, 
+                title: 'App Development', 
+                slug: 'app-development',
+                description: 'Native and cross-platform mobile applications for iOS and Android.',
+                price: '$5,000 - $25,000',
+                icon: '📱',
+                features: ['Native iOS', 'Native Android', 'Cross-Platform'],
+                status: 'active'
+            },
+            { 
+                id: 3, 
+                title: 'AI Automation', 
+                slug: 'ai-automation',
+                description: 'Intelligent automation solutions powered by artificial intelligence.',
+                price: '$3,000 - $20,000',
+                icon: '🤖',
+                features: ['Process Automation', 'AI Integration', 'Cost Reduction'],
+                status: 'active'
+            },
+            { 
+                id: 4, 
+                title: 'Video Editing', 
+                slug: 'video-editing',
+                description: 'Professional video editing services for content creators and businesses.',
+                price: '$500 - $5,000',
+                icon: '🎬',
+                features: ['4K Quality', 'Motion Graphics', 'Color Grading'],
+                status: 'active'
+            },
+            { 
+                id: 5, 
+                title: 'Photo Editing', 
+                slug: 'photo-editing',
+                description: 'Professional photo editing and retouching services.',
+                price: '$100 - $1,000',
+                icon: '📸',
+                features: ['High Resolution', 'Color Correction', 'Background Removal'],
+                status: 'active'
+            },
+            { 
+                id: 6, 
+                title: 'Meta Ads', 
+                slug: 'meta-ads',
+                description: 'Facebook and Instagram advertising campaigns that drive results.',
+                price: '$1,000 - $10,000/month',
+                icon: '📘',
+                features: ['Targeted Campaigns', 'A/B Testing', 'ROI Tracking'],
+                status: 'active'
+            },
+            { 
+                id: 7, 
+                title: 'Google Ads', 
+                slug: 'google-ads',
+                description: 'Strategic Google Ads campaigns that increase visibility and drive traffic.',
+                price: '$1,500 - $15,000/month',
+                icon: '🔍',
+                features: ['Keyword Research', 'Campaign Optimization', 'Performance Reports'],
+                status: 'active'
+            },
+            { 
+                id: 8, 
+                title: 'SEO Services', 
+                slug: 'seo',
+                description: 'Comprehensive search engine optimization services.',
+                price: '$800 - $5,000/month',
+                icon: '📈',
+                features: ['On-Page SEO', 'Link Building', 'Technical SEO'],
+                status: 'active'
+            }
+        ];
+
+        function populateData() {
+            try {
+                localStorage.setItem('admin-cities', JSON.stringify(testCities));
+                localStorage.setItem('admin-services', JSON.stringify(testServices));
+                
+                document.getElementById('result').innerHTML = `
+                    <div class="success">
+                        <strong>✅ Success!</strong> Test data populated successfully!<br>
+                        <strong>Cities:</strong> ${testCities.length} added<br>
+                        <strong>Services:</strong> ${testServices.length} added<br><br>
+                        <strong>Next Steps:</strong>
+                        <ol>
+                            <li>Go to <a href="/admin/seo-generator" target="_blank">Admin → SEO Generator</a></li>
+                            <li>Select a city (e.g., Toronto)</li>
+                            <li>Click "Generate SEO Pages"</li>
+                            <li>Review the generated content</li>
+                            <li>Test the service pages (e.g., /services/web-development-in-toronto)</li>
+                        </ol>
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `
+                    <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                        <strong>❌ Error:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function clearData() {
+            try {
+                localStorage.removeItem('admin-cities');
+                localStorage.removeItem('admin-services');
+                localStorage.removeItem('admin-seo-pages');
+                
+                document.getElementById('result').innerHTML = `
+                    <div class="info">
+                        <strong>🗑️ Cleared!</strong> All test data has been removed from localStorage.
+                    </div>
+                `;
+                document.getElementById('dataDisplay').innerHTML = '';
+            } catch (error) {
+                document.getElementById('result').innerHTML = `
+                    <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                        <strong>❌ Error:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function checkData() {
+            try {
+                const cities = JSON.parse(localStorage.getItem('admin-cities') || '[]');
+                const services = JSON.parse(localStorage.getItem('admin-services') || '[]');
+                const seoPages = JSON.parse(localStorage.getItem('admin-seo-pages') || '[]');
+                
+                document.getElementById('dataDisplay').innerHTML = `
+                    <div class="info">
+                        <h3>📊 Current Data Status</h3>
+                        <p><strong>Cities:</strong> ${cities.length} items</p>
+                        <p><strong>Services:</strong> ${services.length} items</p>
+                        <p><strong>SEO Pages:</strong> ${seoPages.length} items</p>
+                        
+                        ${cities.length > 0 ? `
+                            <h4>Cities:</h4>
+                            <pre>${JSON.stringify(cities.map(c => ({name: c.name, country: c.country})), null, 2)}</pre>
+                        ` : ''}
+                        
+                        ${services.length > 0 ? `
+                            <h4>Services:</h4>
+                            <pre>${JSON.stringify(services.map(s => ({title: s.title, slug: s.slug})), null, 2)}</pre>
+                        ` : ''}
+                        
+                        ${seoPages.length > 0 ? `
+                            <h4>SEO Pages:</h4>
+                            <pre>${JSON.stringify(seoPages.map(p => ({slug: p.slug, status: p.status})), null, 2)}</pre>
+                        ` : ''}
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('dataDisplay').innerHTML = `
+                    <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                        <strong>❌ Error:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Auto-check data on page load
+        window.onload = function() {
+            checkData();
+        };
+    </script>
+</body>
+</html>

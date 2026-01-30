@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>localStorage Test - Digital Dekho</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; }
+        .test-section { background: #f8f9fa; padding: 20px; margin: 15px 0; border-radius: 8px; }
+        button { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; margin: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .success { background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin: 10px 0; }
+        .error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin: 10px 0; }
+        pre { background: #e9ecef; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🧪 localStorage Test for Lead System</h1>
+    
+    <div class="test-section">
+        <h3>Test 1: Submit Lead via API</h3>
+        <button onclick="submitTestLead()">Submit Test Lead</button>
+        <div id="apiResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Test 2: Check localStorage</h3>
+        <button onclick="checkLocalStorage()">Check localStorage</button>
+        <button onclick="clearLocalStorage()">Clear localStorage</button>
+        <div id="localStorageResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Test 3: Manual localStorage Test</h3>
+        <button onclick="addManualLead()">Add Manual Lead</button>
+        <div id="manualResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Current localStorage Data</h3>
+        <button onclick="showCurrentData()">Show Current Data</button>
+        <div id="currentData"></div>
+    </div>
+
+    <script>
+        async function submitTestLead() {
+            const resultDiv = document.getElementById('apiResult');
+            resultDiv.innerHTML = 'Submitting...';
+            
+            try {
+                const response = await fetch('/api/leads', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: 'Test User ' + Date.now(),
+                        email: 'test' + Date.now() + '@example.com',
+                        phone: '+1-555-' + Math.floor(Math.random() * 10000),
+                        company: 'Test Company',
+                        service: 'Web Development',
+                        budget: '$5,000 - $10,000',
+                        timeline: '2-3 months',
+                        message: 'This is a test lead submission to verify the system works.'
+                    }),
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    // Manually save to localStorage (simulating what the form should do)
+                    const existingLeads = JSON.parse(localStorage.getItem('admin-leads') || '[]');
+                    const updatedLeads = [result.lead, ...existingLeads];
+                    localStorage.setItem('admin-leads', JSON.stringify(updatedLeads));
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            ✅ Lead submitted successfully!<br>
+                            Lead ID: ${result.lead.id}<br>
+                            Name: ${result.lead.name}<br>
+                            Saved to localStorage: ${updatedLeads.length} total leads
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ Error: ${result.error}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Network Error: ${error.message}</div>`;
+            }
+        }
+
+        function checkLocalStorage() {
+            const resultDiv = document.getElementById('localStorageResult');
+            
+            try {
+                const leads = localStorage.getItem('admin-leads');
+                const notifications = localStorage.getItem('admin-notifications');
+                
+                if (leads) {
+                    const parsedLeads = JSON.parse(leads);
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            ✅ localStorage 'admin-leads' found<br>
+                            Number of leads: ${parsedLeads.length}<br>
+                            <pre>${JSON.stringify(parsedLeads, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ No 'admin-leads' found in localStorage</div>`;
+                }
+                
+                if (notifications) {
+                    const parsedNotifications = JSON.parse(notifications);
+                    resultDiv.innerHTML += `
+                        <div class="success">
+                            ✅ localStorage 'admin-notifications' found<br>
+                            Number of notifications: ${parsedNotifications.length}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Error reading localStorage: ${error.message}</div>`;
+            }
+        }
+
+        function clearLocalStorage() {
+            localStorage.removeItem('admin-leads');
+            localStorage.removeItem('admin-notifications');
+            document.getElementById('localStorageResult').innerHTML = `
+                <div class="success">✅ localStorage cleared</div>
+            `;
+        }
+
+        function addManualLead() {
+            const resultDiv = document.getElementById('manualResult');
+            
+            try {
+                const testLead = {
+                    id: Date.now(),
+                    name: 'Manual Test Lead',
+                    email: 'manual@test.com',
+                    phone: '+1-555-MANUAL',
+                    company: 'Manual Test Co',
+                    service: 'AI Automation',
+                    budget: '$10,000 - $25,000',
+                    timeline: 'Within 1 month',
+                    message: 'This is a manually added test lead.',
+                    status: 'new',
+                    priority: 'high',
+                    notes: '',
+                    createdAt: new Date().toISOString(),
+                    source: 'Manual Test'
+                };
+
+                const existingLeads = JSON.parse(localStorage.getItem('admin-leads') || '[]');
+                const updatedLeads = [testLead, ...existingLeads];
+                localStorage.setItem('admin-leads', JSON.stringify(updatedLeads));
+
+                resultDiv.innerHTML = `
+                    <div class="success">
+                        ✅ Manual lead added successfully!<br>
+                        Total leads in localStorage: ${updatedLeads.length}
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        function showCurrentData() {
+            const resultDiv = document.getElementById('currentData');
+            
+            try {
+                const leads = localStorage.getItem('admin-leads');
+                const notifications = localStorage.getItem('admin-notifications');
+                
+                let html = '<h4>Current localStorage Data:</h4>';
+                
+                if (leads) {
+                    const parsedLeads = JSON.parse(leads);
+                    html += `
+                        <h5>Leads (${parsedLeads.length}):</h5>
+                        <pre>${JSON.stringify(parsedLeads, null, 2)}</pre>
+                    `;
+                } else {
+                    html += '<p>No leads found</p>';
+                }
+                
+                if (notifications) {
+                    const parsedNotifications = JSON.parse(notifications);
+                    html += `
+                        <h5>Notifications (${parsedNotifications.length}):</h5>
+                        <pre>${JSON.stringify(parsedNotifications, null, 2)}</pre>
+                    `;
+                } else {
+                    html += '<p>No notifications found</p>';
+                }
+                
+                resultDiv.innerHTML = html;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        // Auto-check localStorage on page load
+        window.addEventListener('load', () => {
+            checkLocalStorage();
+            showCurrentData();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Generator Workflow Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border: 1px solid #c3e6cb;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border: 1px solid #ffeaa7;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .test-result {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 SEO Generator Workflow Test</h1>
+        <p>This page will test the complete SEO content generation and display workflow.</p>
+
+        <div class="warning">
+            <strong>⚠️ Prerequisites:</strong>
+            <ul>
+                <li>Development server must be running at localhost:3000</li>
+                <li>Test data should be populated (use populate-data.html first)</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h3>Step 1: Check Test Data</h3>
+            <p>Verify that cities and services are loaded in localStorage.</p>
+            <button onclick="checkTestData()">Check Test Data</button>
+            <div id="testDataResult"></div>
+        </div>
+
+        <div class="step">
+            <h3>Step 2: Simulate SEO Generation</h3>
+            <p>Generate SEO content for Toronto (simulates admin panel generation).</p>
+            <button onclick="generateSEOContent()">Generate SEO Content for Toronto</button>
+            <div id="generateResult"></div>
+        </div>
+
+        <div class="step">
+            <h3>Step 3: Publish Content</h3>
+            <p>Publish the generated content to make it visible on frontend.</p>
+            <button onclick="publishContent()">Publish All Toronto Content</button>
+            <div id="publishResult"></div>
+        </div>
+
+        <div class="step">
+            <h3>Step 4: Test Frontend Pages</h3>
+            <p>Test that the generated content appears on service pages.</p>
+            <button onclick="testFrontendPages()">Test Frontend Pages</button>
+            <div id="frontendResult"></div>
+        </div>
+
+        <div class="step">
+            <h3>Step 5: Verify Different Content</h3>
+            <p>Check that different cities show different content.</p>
+            <button onclick="testDifferentCities()">Test Different Cities</button>
+            <div id="differentCitiesResult"></div>
+        </div>
+
+        <div id="overallResult"></div>
+    </div>
+
+    <script>
+        function checkTestData() {
+            const cities = JSON.parse(localStorage.getItem('admin-cities') || '[]');
+            const services = JSON.parse(localStorage.getItem('admin-services') || '[]');
+            
+            const result = document.getElementById('testDataResult');
+            
+            if (cities.length > 0 && services.length > 0) {
+                result.innerHTML = `
+                    <div class="success">
+                        ✅ Test data found!<br>
+                        Cities: ${cities.length} (${cities.map(c => c.name).join(', ')})<br>
+                        Services: ${services.length} (${services.map(s => s.title).join(', ')})
+                    </div>
+                `;
+            } else {
+                result.innerHTML = `
+                    <div class="warning">
+                        ❌ Test data missing!<br>
+                        Cities: ${cities.length}<br>
+                        Services: ${services.length}<br>
+                        <strong>Please run populate-data.html first</strong>
+                    </div>
+                `;
+            }
+        }
+
+        function generateSEOContent() {
+            const cities = JSON.parse(localStorage.getItem('admin-cities') || '[]');
+            const services = JSON.parse(localStorage.getItem('admin-services') || '[]');
+            
+            if (cities.length === 0 || services.length === 0) {
+                document.getElementById('generateResult').innerHTML = `
+                    <div class="warning">❌ Please check test data first</div>
+                `;
+                return;
+            }
+
+            // Find Toronto
+            const toronto = cities.find(c => c.name === 'Toronto');
+            if (!toronto) {
+                document.getElementById('generateResult').innerHTML = `
+                    <div class="warning">❌ Toronto not found in test data</div>
+                `;
+                return;
+            }
+
+            // Generate SEO pages for Toronto
+            const seoPages = [];
+            services.forEach(service => {
+                const slug = \`\${service.slug}-in-toronto\`;
+                const page = {
+                    id: Date.now() + Math.random(),
+                    cityId: toronto.id,
+                    cityName: toronto.name,
+                    serviceId: service.id,
+                    serviceName: service.title,
+                    slug: slug,
+                    metaTitle: \`\${service.title} Services in Toronto | Digital Dekho\`,
+                    metaDescription: \`Professional \${service.title.toLowerCase()} services in Toronto. Expert solutions that drive results for local businesses.\`,
+                    keywords: [\`\${service.title.toLowerCase()} toronto\`, \`toronto \${service.title.toLowerCase()}\`],
+                    content: \`
+                        <h1>\${service.title} Services in Toronto</h1>
+                        <p>Toronto's competitive business landscape demands \${service.title.toLowerCase()} that performs exceptionally. With a thriving business community, your digital presence needs to capture attention instantly and convert visitors into customers.</p>
+                        
+                        <h2>How \${service.title} Solves Toronto Business Challenges</h2>
+                        <p>A local business in Toronto was struggling with their digital presence. After implementing our \${service.title.toLowerCase()} solution, they saw remarkable improvements in customer engagement and business growth within just a few months.</p>
+                        
+                        <h2>Why Choose Our \${service.title} Team in Toronto</h2>
+                        <p>Our \${service.title.toLowerCase()} approach combines cutting-edge technologies with deep understanding of Toronto's market dynamics. We specialize in creating solutions that serve local businesses effectively.</p>
+                        
+                        <h2>Our \${service.title} Process</h2>
+                        <ol>
+                            <li><strong>Discovery & Strategy:</strong> Analyze your Toronto market position</li>
+                            <li><strong>Custom Design:</strong> Create solutions tailored to local audience</li>
+                            <li><strong>Development:</strong> Build using modern frameworks and best practices</li>
+                            <li><strong>Testing:</strong> Comprehensive QA across devices and platforms</li>
+                            <li><strong>Launch & Support:</strong> Deploy with ongoing maintenance and optimization</li>
+                        </ol>
+                        
+                        <h2>Toronto \${service.title} Experience</h2>
+                        <p>We've successfully delivered \${service.title.toLowerCase()} solutions for businesses across Toronto, helping local companies achieve their digital goals and grow their market presence.</p>
+                        
+                        <h2>Frequently Asked Questions</h2>
+                        <h3>How long does \${service.title.toLowerCase()} take for Toronto businesses?</h3>
+                        <p>Most Toronto \${service.title.toLowerCase()} projects are completed within 6-12 weeks, depending on complexity and specific requirements.</p>
+                        
+                        <h3>Do you provide \${service.title.toLowerCase()} that works with local Toronto systems?</h3>
+                        <p>Yes, we ensure all our \${service.title.toLowerCase()} solutions integrate seamlessly with local business systems and requirements in Toronto.</p>
+                        
+                        <h2>Ready to Transform Your Toronto Business?</h2>
+                        <p>Don't let your competitors dominate Toronto's market. Our \${service.title.toLowerCase()} team is ready to create solutions that drive real results for your business. Contact us today for a free consultation.</p>
+                    \`,
+                    status: 'draft',
+                    isIndexed: false,
+                    views: 0,
+                    qualityScore: 85,
+                    generatedAt: new Date().toISOString(),
+                    generatedBy: 'Test_Generator'
+                };
+                seoPages.push(page);
+            });
+
+            // Save to localStorage
+            localStorage.setItem('admin-seo-pages', JSON.stringify(seoPages));
+
+            document.getElementById('generateResult').innerHTML = `
+                <div class="success">
+                    ✅ Generated ${seoPages.length} SEO pages for Toronto!<br>
+                    Pages: ${seoPages.map(p => p.slug).join(', ')}
+                </div>
+            `;
+        }
+
+        function publishContent() {
+            const seoPages = JSON.parse(localStorage.getItem('admin-seo-pages') || '[]');
+            
+            if (seoPages.length === 0) {
+                document.getElementById('publishResult').innerHTML = `
+                    <div class="warning">❌ No SEO pages found. Generate content first.</div>
+                `;
+                return;
+            }
+
+            // Publish all pages
+            const publishedPages = seoPages.map(page => ({
+                ...page,
+                status: 'published',
+                updatedAt: new Date().toISOString()
+            }));
+
+            localStorage.setItem('admin-seo-pages', JSON.stringify(publishedPages));
+
+            document.getElementById('publishResult').innerHTML = `
+                <div class="success">
+                    ✅ Published ${publishedPages.length} SEO pages!<br>
+                    All pages are now live and accessible on frontend.
+                </div>
+            `;
+        }
+
+        function testFrontendPages() {
+            const seoPages = JSON.parse(localStorage.getItem('admin-seo-pages') || '[]');
+            const publishedPages = seoPages.filter(p => p.status === 'published');
+            
+            if (publishedPages.length === 0) {
+                document.getElementById('frontendResult').innerHTML = `
+                    <div class="warning">❌ No published pages found. Publish content first.</div>
+                `;
+                return;
+            }
+
+            const testUrls = publishedPages.slice(0, 3).map(page => 
+                \`<a href="/services/\${page.slug}" target="_blank">/services/\${page.slug}</a>\`
+            ).join('<br>');
+
+            document.getElementById('frontendResult').innerHTML = `
+                <div class="success">
+                    ✅ Frontend pages ready for testing!<br><br>
+                    <strong>Test these URLs:</strong><br>
+                    ${testUrls}<br><br>
+                    <em>Click the links above to verify generated content appears correctly.</em>
+                </div>
+            `;
+        }
+
+        function testDifferentCities() {
+            // Generate content for Vancouver to test differences
+            const cities = JSON.parse(localStorage.getItem('admin-cities') || '[]');
+            const services = JSON.parse(localStorage.getItem('admin-services') || '[]');
+            const existingPages = JSON.parse(localStorage.getItem('admin-seo-pages') || '[]');
+            
+            const vancouver = cities.find(c => c.name === 'Vancouver');
+            if (!vancouver) {
+                document.getElementById('differentCitiesResult').innerHTML = `
+                    <div class="warning">❌ Vancouver not found in test data</div>
+                `;
+                return;
+            }
+
+            // Generate one page for Vancouver
+            const webDevService = services.find(s => s.title === 'Web Development');
+            if (!webDevService) {
+                document.getElementById('differentCitiesResult').innerHTML = `
+                    <div class="warning">❌ Web Development service not found</div>
+                `;
+                return;
+            }
+
+            const vancouverPage = {
+                id: Date.now() + Math.random(),
+                cityId: vancouver.id,
+                cityName: vancouver.name,
+                serviceId: webDevService.id,
+                serviceName: webDevService.title,
+                slug: 'web-development-in-vancouver',
+                metaTitle: 'Web Development Services in Vancouver | Digital Dekho',
+                metaDescription: 'Professional web development services in Vancouver. Expert solutions that drive results for local businesses.',
+                keywords: ['web development vancouver', 'vancouver web development'],
+                content: \`
+                    <h1>Web Development Services in Vancouver</h1>
+                    <p>Vancouver's tech-savvy business environment demands websites that showcase innovation and creativity. With a diverse business ecosystem, your web presence needs to reflect the city's dynamic spirit while delivering exceptional user experiences.</p>
+                    
+                    <h2>How Web Development Solves Vancouver Business Challenges</h2>
+                    <p>A Vancouver-based startup needed a website that would appeal to both local and international clients. Our custom web development solution helped them establish credibility and attract investors, resulting in successful funding rounds.</p>
+                    
+                    <h2>Why Choose Our Web Development Team in Vancouver</h2>
+                    <p>Our Vancouver web development team understands the city's unique business culture and international outlook. We create websites that resonate with local audiences while meeting global standards.</p>
+                \`,
+                status: 'published',
+                isIndexed: false,
+                views: 0,
+                qualityScore: 85,
+                generatedAt: new Date().toISOString(),
+                generatedBy: 'Test_Generator'
+            };
+
+            const allPages = [...existingPages, vancouverPage];
+            localStorage.setItem('admin-seo-pages', JSON.stringify(allPages));
+
+            document.getElementById('differentCitiesResult').innerHTML = `
+                <div class="success">
+                    ✅ Generated Vancouver content for comparison!<br><br>
+                    <strong>Compare these pages:</strong><br>
+                    <a href="/services/web-development-in-toronto" target="_blank">Toronto Web Development</a><br>
+                    <a href="/services/web-development-in-vancouver" target="_blank">Vancouver Web Development</a><br><br>
+                    <em>Notice how the content is different for each city while maintaining the same service focus.</em>
+                </div>
+            `;
+        }
+
+        // Auto-run initial check
+        window.onload = function() {
+            checkTestData();
+        };
+    </script>
+</body>
+</html>
